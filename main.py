@@ -720,28 +720,34 @@ def comprehensive_analysis(symbol, session_analyzer, technical_analyzer, key_lev
         positive_formations = sum(1 for f in formations_dict.values() if f.get('score', 0) > 0)
         negative_formations = sum(1 for f in formations_dict.values() if f.get('score', 0) < 0)
 
-        # RSI'ya göre yön ayarlaması
-        if rsi < 50:  # LONG bias
-            total_technical_score += rsi_score
-        else:  # SHORT bias
-            if rsi > 70:
-                total_technical_score -= 4
-            elif rsi > 65:
-                total_technical_score -= 3
-            elif rsi > 60:
-                total_technical_score -= 2
-            elif rsi > 50:
-                total_technical_score -= 1
+# RSI oversold/overbought kontrolü (FILTER olarak)
+        rsi_filter = ""
+        if rsi < 30:
+            rsi_filter = "OVERSOLD"  # LONG timing iyi
+            rsi_score_boost = 2  # LONG için bonus
+        elif rsi > 70:
+            rsi_filter = "OVERBOUGHT"  # SHORT timing iyi  
+            rsi_score_boost = -2  # SHORT için bonus (negatif)
+        else:
+            rsi_filter = "NEUTRAL"  # 30-70 arası nötr
+            rsi_score_boost = 0
 
-        # Gelişmiş sinyal yönü belirleme
+        # Total technical score hesapla
+        total_technical_score = weighted_technical_score + volume_score + rsi_score_boost
+
+        # Gelişmiş sinyal yönü belirleme (RSI filter ile)
         if (total_technical_score >= threshold['min_score'] and 
-            positive_formations >= threshold['min_formations'] and
-            rsi < 50):
-            signal_direction = "LONG"
+            positive_formations >= threshold['min_formations']):
+            if rsi_filter == "OVERSOLD" or rsi_filter == "NEUTRAL":
+                signal_direction = "LONG"
+            else:
+                return None  # OVERBOUGHT'ta LONG verme
         elif (total_technical_score <= -threshold['min_score'] and 
-              negative_formations >= threshold['min_formations'] and
-              rsi > 50):
-            signal_direction = "SHORT" 
+              negative_formations >= threshold['min_formations']):
+            if rsi_filter == "OVERBOUGHT" or rsi_filter == "NEUTRAL":
+                signal_direction = "SHORT"
+            else:
+                return None  # OVERSOLD'da SHORT verme
         else:
             return None  # Yetersiz sinyal
 
