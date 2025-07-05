@@ -70,7 +70,8 @@ CHAT_ID = "1075504620"
 # Takip edilecek coinler
 COINS = [
     "BTC/USDT", "ETH/USDT", "SOL/USDT", "DOGE/USDT",
-    "SHIB/USDT", "XRP/USDT", "AVAX/USDT", "NEIRO/USDT"
+    "SHIB/USDT", "XRP/USDT", "AVAX/USDT", "NEIRO/USDT",
+    "PNUT/USDT", "GRIFFAIN/USDT"
 ]
 
 # Bot ayarları
