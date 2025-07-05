@@ -89,9 +89,9 @@ FORMATION_WEIGHTS = {
 
 # Dinamik eşik ayarları
 THRESHOLD_SETTINGS = {
-    'STRONG_TREND': {'min_formations': 3, 'min_score': 6},
-    'WEAK_TREND': {'min_formations': 4, 'min_score': 8},
-    'SIDEWAYS': {'min_formations': 5, 'min_score': 12}
+    'STRONG_TREND': {'min_formations': 2, 'min_score': 4},
+    'WEAK_TREND': {'min_formations': 3, 'min_score': 6},
+    'SIDEWAYS': {'min_formations': 4, 'min_score': 8}
 }
 
 def detect_market_condition(ohlcv_1d, ohlcv_4h):
